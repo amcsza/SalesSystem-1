@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 4.0)
+cmake_minimum_required(VERSION 3.16)
 project(SalesSystem_)
 
 set(CMAKE_CXX_STANDARD 23)
@@ -6,6 +6,16 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
+# 设置SQLite3路径
+set(SQLITE3_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/third_party/sqlite/include")
+set(SQLITE3_LIBRARY "${PROJECT_SOURCE_DIR}/third_party/sqlite/lib/sqlite3.dll")
+
+# 创建SQLite3目标
+add_library(SQLite3::SQLite3 UNKNOWN IMPORTED)
+set_target_properties(SQLite3::SQLite3 PROPERTIES
+    IMPORTED_LOCATION "${SQLITE3_LIBRARY}"
+    INTERFACE_INCLUDE_DIRECTORIES "${SQLITE3_INCLUDE_DIR}"
+)
 
 find_package(Qt6 COMPONENTS
         Core
@@ -13,11 +23,15 @@ find_package(Qt6 COMPONENTS
         Widgets
         REQUIRED)
 
-add_executable(SalesSystem_ main.cpp)
+add_executable(SalesSystem_ main.cpp
+        sale.cpp
+        sqlite/database.cpp
+        )
 target_link_libraries(SalesSystem_
         Qt::Core
         Qt::Gui
         Qt::Widgets
+        SQLite3::SQLite3
 )
 
 if (WIN32 AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
