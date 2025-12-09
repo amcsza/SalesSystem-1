@@ -70,6 +70,7 @@ const char *sql_create_cart_items =
     return true;       
 }
 
+
  int add_product(const char* name, double price, int stock) {
      if(db == NULL){
         fprintf(stderr, "数据库未连接\n");
