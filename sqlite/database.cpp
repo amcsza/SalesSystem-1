@@ -69,13 +69,7 @@ const char *sql_create_cart_items =
     }
     return true;       
 }
-int main() {
-    if(!init_db()){
-        return -1;
-    }
-    sqlite3_close(db);
-    return 0;
-}
+
  int add_product(const char* name, double price, int stock) {
      if(db == NULL){
         fprintf(stderr, "数据库未连接\n");
@@ -89,6 +83,7 @@ int main() {
          fprintf(stderr, "预编译SQL失败: %s\n", sqlite3_errmsg(db));
          return -1;
      }
+     
         sqlite3_bind_text(stmt, 1, name, -1, SQLITE_TRANSIENT);
         sqlite3_bind_double(stmt, 2, price);
         sqlite3_bind_int(stmt, 3, stock);
@@ -203,7 +198,7 @@ int buy_product(int id, int buy_num , double amount_paid, double* change) {
         return -1;
     }
     sqlite3_finalize(stmt);
-    printf("购买成功！总价: %.2f,找零: %.2f\n", total_price, *change);
+    printf("购买成功！总价: %.2f找零: %.2f\n", total_price, *change);
     return 0;
 }
     
